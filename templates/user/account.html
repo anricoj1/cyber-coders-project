@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+{% block head %}<link rel="stylesheet" href="static/css/account.css"/>{% endblock %}
+{% block title %} Account {% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <div class="row" id="info-container">
+        <div class="col-md-4 text-right">
+            <image src="static/images/profilepic.png" id="profile-pic"></image>
+        </div>
+        <div class="col-md-8 text-left">
+            <h2>{{session.first_name}} {{ session.last_name }}</h2>
+            <form action="{{url_for('edit_profile', user_id=session.user_ID)}}" method="post">
+              <input type="hidden" name="_method" value="EDIT">
+              <input type="submit" value="Edit" class="btn btn-primary">
+            </form>
+            <hr>
+            <p>User ID: {{ session.user_ID }}</p>
+            <p>Email: {{session.email}}</p>
+        </div>
+    </div>
+      <hr/>
+    <div class="container">
+    <div class="row">
+        <h3>MEMBER OF</h3>
+        <table class="table table-hover">
+          <tr class='info'>
+            <th>Groups:</th>
+          </tr>
+        </table>
+        <section id="about">
+          {% for g in groups %}
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-4 text-center">
+                <div class="card" style="width: 18rem;">
+                  <img class"card-img-top" src="static/images/eventpic.png" alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="/group/{{ g.group_id }}" style="color:#0033cc">{{g.name}}</a></h5>
+                    <p class="card-text">{{g.description}}</p>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+{#  <hr>#}
+  <div>
+    <img src="{{session.profile_pic_path}}"/>
+  </div>
+{% endblock %}

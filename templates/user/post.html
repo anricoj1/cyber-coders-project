@@ -1,0 +1,19 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="jumbotron text-center">
+  <h1>Activity Feed <small> Welcome {{session.first_name}} {{session.last_name}} </small></h1>
+  <hr>
+  <h2>Posts</h2>
+  {% from "includes/_formhelpers.html" import render_field %}
+  <form method="POST" action="">
+    <div class="form-group">
+      {{render_field(form.post, class="form-control")}}
+    </div>
+    <p><input type=submit class="btn btn-primary" value=Search></p>
+  </form>
+  </div>
+
+</div>
+{% endblock %}

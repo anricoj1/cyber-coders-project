@@ -1,0 +1,85 @@
+#event-date{
+  margin-top: 40px;
+}
+#event-title{
+  margin:0px;
+}
+#static-box{
+  position: fixed;
+  top: 100px;
+  right:0px;
+  height: 600px;
+  width: 500px;
+  /* float: right; */
+  background-color: #F5F5F5;
+}
+#eventpic{
+  margin: 20px 0px 30px 0px;
+}
+
+.prof-img{
+  padding-left: 10px;
+  margin-top: 30px;
+  width: 100px;
+  height: auto;
+}
+
+input[type="text"] {
+  width: 20%;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  margin: 8px 0;
+  outline: none;
+  padding: 8px;
+  box-sizing: border-box;
+  transition: 0.3s;
+}
+
+input[type="text"]:focus {
+  border-color: #4A508B;
+  box-shadow: 0 0 1px 0 #4A508B;
+}
+
+.iconSearch input[type="text"] {
+  padding-left: 40px;
+}
+
+.iconSearch {
+  position: relative;
+}
+
+.iconSearch i {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  padding: 9px 8px;
+  color: #aaa;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.iconSearch input[type="text"]:focus + i {
+  color: #4A508B;
+}
+
+.iconSearch.inputIconBg i {
+  background-color: #aaa;
+  color: #fff;
+  padding: 9px 4px;
+  border-radius: 4px 0 0 4px;
+}
+
+.iconSearch.inputIconBg input[type="text"]:focus + i {
+  color: #fff;
+  background-color: #4A508B;
+}
+
+.card{
+  padding-left: 50px;
+  padding-right:60px;
+  margin-bottom: 10px;
+  margin: 0 !important;
+}
+.card h5{
+  margin-bottom: 0;
+}

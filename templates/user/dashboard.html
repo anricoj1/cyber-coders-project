@@ -1,0 +1,137 @@
+{% extends 'base/base.html' %}
+{% block head %}<link rel="stylesheet" href="static/css/eventpage.css"/>{% endblock %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Dashboard <small style="color:#000000"> Welcome {{session.first_name}}</small></h1>
+  <a class="btn btn-success" href="/create_group"> Add Group</a>
+  <hr>
+  <h3> <small style="color:#000000"> Groups Created: {{c1}}</small></h3>
+    <table class="table table-hover">
+      <tr class='info'>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Date</th>
+        <th></th>
+        <th></th>
+      </tr>
+      {% for g in group %}
+      <tr>
+        <td><a href="/group/{{ g.group_id }}" style="color:#0033cc">{{g.name}}</a></td>
+        <td>{{g.creator}}</td>
+        <td>{{g.createdate}}</td>
+        <td><a href="edit_group/{{ g.group_id }}" class="btn btn-default pull-right">Edit</a></td>
+        <td>
+          <form action="{{url_for('delete_group', group_id=g.group_id)}}" method="post">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="submit" value="Delete" class="btn btn-danger">
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+
+
+
+  <h3> <small style="color:#000000"> Events Created: {{c4}} </small></h3>
+  <table class="table table-hover">
+    <tr class='info'>
+      <th>Title</th>
+      <th></th>
+      <th></th>
+    </tr>
+    {% for c in created %}
+      <tr>
+        <td><a href="/event/{{ c.event_id }}" style="color:#0033cc">{{c.name}}</a></td>
+        <td><a href="edit_event/{{ c.event_id }}" class="btn btn-default pull-right">Edit</a></td>
+        <td>
+          <form action="{{url_for('delete_event', event_id=c.event_id)}}" method="post">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="submit" value="Delete" class="btn btn-danger">
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+
+
+
+  <table class="table table-hover">
+    <tr class='info'>
+      <th>Groups You've Joined: {{c3}}</th>
+    </tr>
+  </table>
+  <section id="about">
+    {% for g in groups %}
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4 text-center">
+          <div class="card" style="width: 18rem;">
+            <img class"card-img-top" src="static/images/eventpic.png" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title"><a href="/group/{{ g.group_id }}" style="color:#0033cc">{{g.name}}</a></h5>
+              <p class="card-text">{{g.description}}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<div class="container">
+<table class="table table-hover">
+  <tr class='info'>
+    <th>Events You've Joined: {{c2}}</th>
+  </tr>
+</table>
+<section id="about">
+  {% for e in events %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4 text-center">
+        <div class="card" style="width: 18rem;">
+          <img class"card-img-top" src="static/images/eventpic.png" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title"><a href="/event/{{ e.event_id }}" style="color:#0033cc">{{e.name}}</a></h5>
+            <p class="card-text">{{e.description}}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+</section>
+</div>
+<!--  <h3> <small> Events You've Joined: {{c2}} </small></h3>
+  <table class="table table-hover">
+    <tr class='info'>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+    {% for e in events %}
+      <tr>
+        <td><a href="/event/{{ e.event_id }}">{{e.name}}</a></td>
+        <td>{{e.description}}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <h3><small> Groups You've Joined: {{c3}}</small></h3>
+  <table class="table table-hover">
+    <tr class='info'>
+      <th>Name</th>
+      <th>Tags</th>
+      <th>Creator</th>
+    </tr>
+    {% for g in groups %}
+      <tr>
+        <td><a href="/group/{{ g.group_id }}">{{g.name}}</a></td>
+        <td>{{g.tag}}</td>
+        <td>{{g.creator}}</td>
+      </tr>
+    {% endfor %}
+  </table> -->
+{% endblock %}

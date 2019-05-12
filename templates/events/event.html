@@ -1,0 +1,72 @@
+{% extends 'base/base.html' %}
+{% block head %}<link rel="stylesheet" href="/static/css/eventpage.css"/>{% endblock %}
+{% block title %}{{event.name}}{% endblock %}
+{% block content %}
+<div id ="static-box">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+          <h2>Description</h2>
+          <p>{{event.description}}</p>
+          {% if mem.attending == 1: %}
+          <form action="{{url_for('unfollow_event', event_id=event.event_id)}}" method="post" action="">
+            <input type="hidden" name="_method" value="Unfollow">
+            <input type="submit" value="Unfollow" class="btn btn-primary">
+          </form>
+          {% else %}
+          <form action="{{url_for('follow_event', event_id=event.event_id)}}" method="post" action="">
+            <input type="hidden" name="_method" value="Join">
+            <input type="submit" value="Join" class="btn btn-primary">
+          </form>
+          {% endif %}
+          <p></p>
+          <p>Created By: {{event.creator}}</p>
+      </div>
+    </div>
+    <div class="row">
+
+    </div>
+  </div>
+</div>
+<!-- End OF BOX -->
+
+  <div class="container">
+    <div class="row">
+      <div id="" class="col-md-5">
+        <h2 id="event-date"> <small>{{event.date_time}} <small></h2>
+      </div>
+    </div>
+      <div class="row">
+          <div class="col-md-5">
+            <h1 id="event-name">{{event.name}}</h1>
+          </div>
+      </div>
+    <div class="row">
+      <div class="col-md-8">
+        <img src="/static/images/largeeventpic.png" class="figure-img img-fluid" id="grouppic"/>
+      </div>
+    </div>
+
+    <div class="row">
+      <hr class="col-md-6">
+    </div>
+
+  </div>
+
+  <div class="container">
+    <h3 class="">Attendees({{ count }})</h3>
+    {% for a in attendee %}
+    <div class="row">
+      <div class="col-md-6">
+        <div class="col-md-3">
+          <figure>
+            <img class="prof-img" src="{{url_for('static', filename='images/ProfilePics/james.png') }}" alt="">
+            <figcaption class="text-center">{{a.user_name}}</figcaption>
+          </figure>
+        </div>
+    {% endfor %}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

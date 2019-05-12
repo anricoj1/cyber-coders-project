@@ -1,0 +1,78 @@
+<!doctype html>
+<!-- IMPORTANT!! RELOAD CSS WITH CTRL SHIFT R ON CHROME -->
+<html>
+  <head>
+    <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script> -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    {% block head %}{% endblock %}
+    <title>{% block title %}{% endblock %} MEET</title>
+  </head>
+  <body>
+    {% block navbar %}
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+          <img src="{{ url_for('static', filename='images/Logo.png') }}" width="100px" height="auto" class="d-inline-block align-top" alt="">
+        </a>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/create_group" style="color:#0033cc">Start a Group</a></li>
+          {% if session['role'] == 'user' -%}
+          <li><a href="/dashboard" style="color:#0033cc">Dashboard</a></li>
+          <li><a href="/search" style="color:#0033cc">Discover</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:#0033cc">
+              <img src="http://placehold.it/18x18" class="profile-image img-circle"> {{session['first_name']}} <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/account"><i class="fa fa-cog"></i> Account</a></li>
+                <li class="divider"></li>
+                <li><a href="/logout"><i class="fa fa-sign-out"></i> Sign-out</a></li>
+                <li><a href="/dashboard"><i class="fa fa-cog"></i> Dashboard</a></li>
+              </ul>
+          </li>
+          {% elif session['role'] == 'admin' -%}
+          <li><a href="/admin_only" style="color:#0033cc">Admin Dashboard</a></li>
+          <li><a href="/search" style="color:#0033cc">Discover</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:#0033cc">
+              <img src="http://placehold.it/18x18" class="profile-image img-circle"> {{session['first_name']}} <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/account"><i class="fa fa-cog"></i> Account</a></li>
+                <li class="divider"></li>
+                <li><a href="/logout"><i class="fa fa-sign-out"></i> Sign-out</a></li>
+                <li><a href="/dashboard"><i class="fa fa-cog"></i> Dashboard</a></li>
+          {% else %}
+          <li><a href="/login" style="color:#0033cc">Log in</a></li>
+          <li><a href="/register" style="color:#0033cc">Sign up</a></li>
+          {% endif %}
+        </ul>
+      </div>
+      <hr width="85%" />
+    </nav>
+    {% include 'includes/_messages.html' %}
+    {% endblock %}
+
+    <div class="containter">{% block content %}
+      <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/login">Login page</a></li>
+        <li><a href="/register">Signup Page</a></li>
+        <li><a href="/profile">Profile Page</a></li>
+        <li><a href="/event">Event Page</a></li>
+      </ul>
+    {% endblock %}</div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+</body>
+  </body>
+</html>

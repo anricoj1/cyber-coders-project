@@ -1,0 +1,73 @@
+header{
+  background-image: url("/static/images/homebk.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 20px auto;
+  height: 500px;
+  background-color: white !important;
+  padding-top: 100px;
+}
+input[type=radio]{
+ color: green !important;
+}
+
+
+
+#searchbar{
+  height: 50px;
+  width: 500px;
+  color:black;
+  border: none;
+  padding: 0px;
+  margin: 0px;
+}
+::placeholder{
+  padding-left: 10px;
+}
+header button{
+  height: 50px;
+  padding:0px;
+  margin:0px;
+  /*margin-right: 200px;*/
+  width: 50px;
+  background-color:#FF6969;
+  border: none;
+  float:inherit;
+  position: absolute;
+
+}
+i{
+  font-size: 20px;
+}
+
+form.example::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+
+/* .container-fluid{
+  margin: 50px auto;
+  height: 500px;
+
+} */
+#search-container{
+  background-color: #4A508B;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+.card{
+  padding-left: 60px;
+  padding-right:60px;
+  margin-bottom: 10px;
+  margin: 0;
+}
+.card h5{
+  margin-bottom: 0;
+}
+.card p{
+  display: inline-block;
+  white-space: normal;
+}

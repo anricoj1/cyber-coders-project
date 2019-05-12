@@ -1,0 +1,56 @@
+body {
+  font-family: "Avenir Next";
+}
+
+h2{
+  font-weight: bold;
+}
+h3{
+  font-weight: bold;
+  color: #4A508B;
+}
+label{
+  font-weight: normal;
+  color: #4A508B !important;
+}
+
+/* #static-box{
+  position: static;
+  height: 500px;
+  width: 400px;
+  float: right;
+  background-color: #F5F5F5;
+} */
+.si-button{
+  margin-top: 20px;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: #4A508B;
+  color: white;
+}
+#text-group{
+  padding-top: 10px;
+  padding-bottom: 30px;
+}
+#login .container #login-row #login-column #login-box {
+  margin-top: 50px;
+  max-width: 500px;
+  height: 550px;
+  border: 1px solid #979797;
+  background-color: #F5F5F5;
+  /* margin-left: 50%;
+  margin-right: 50%; */
+}
+
+
+#login .container #login-row #login-column #login-box #login-form {
+  padding: 20px;
+}
+#sign-up{
+  text-align: left;
+}
+#box{
+  background-color: black;
+  width:800px;
+  height: 450px;
+}

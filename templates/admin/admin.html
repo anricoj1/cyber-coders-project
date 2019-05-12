@@ -1,0 +1,106 @@
+{% extends 'base/base.html' %}
+{% block head %}<link rel="stylesheet" href="static/css/eventpage.css"/>{% endblock %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="container">
+  <h1>Dashboard <small style="color:#000000"> Welcome {{session.first_name}}</small></h1>
+	<p>{{message}}</p>
+  <a class="btn btn-primary" href="/add_admin"> Add Admin</a>
+	<hr>
+  <h3> <small style="color:#000000">Accounts Watching</small></h3>
+    <table class="table table-hover">
+      <tr class='info'>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Violations</th>
+				<th>Profile Pic</th>
+        <th></th>
+				<th></th>
+      </tr>
+      {% for u in users %}
+      <tr>
+				<td><a href="/profile/{{ u.user_id }}" style="color:#0033cc">{{u.user_id}}</a></td>
+        <td><a href="/profile/{{ u.user_id }}" style="color:#0033cc">{{u.first_name}} {{u.last_name}}</a></td>
+        <td>{{u.email}}</td>
+        <td>{{u.community_violations}}</td>
+				<td>{{u.profile_pic_path}}</td>
+        <td><a href="edit_group/{{ g.group_id }}" class="btn btn-default pull-right">Edit Priv.</a></td>
+        <td>
+          <form action="{{url_for('ban_user', user_id=u.user_id)}}" method="post">
+            <input type="hidden" name="_method" value="BAN">
+            <input type="submit" value="BAN" class="btn btn-danger">
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+	<h3> <small style="color:#000000"> Groups Watching </small></h3>
+    <table class="table table-hover">
+      <tr class='info'>
+				<th>ID</th>
+        <th>Title</th>
+        <th>Creator</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th></th>
+				<th></th>
+      </tr>
+      {% for g in groups %}
+      <tr>
+        <td><a href="/group/{{ g.group_id }}" style="color:#0033cc">{{g.group_id}}</a></td>
+				<td><a href="/group/{{ g.group_id }}" style="color:#0033cc">{{g.name}}</a></td>
+        <td>{{g.creator}}</td>
+        <td>{{g.createdate}}</td>
+				<td>{{g.group_description}}</td>
+        <td><a href="edit_group/{{ g.group_id }}" class="btn btn-default pull-right">Edit</a></td>
+        <td>
+          <form action="{{url_for('delete_group', group_id=g.group_id)}}" method="post">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="submit" value="Delete" class="btn btn-danger">
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+	<h3> <small style="color:#000000"> Events Watching </small></h3>
+  <table class="table table-hover">
+    <tr class='info'>
+      <th>Event ID</th>
+      <th>Group ID</th>
+      <th>Name</th>
+			<th>Creator</th>
+			<th>Date</th>
+			<th>Start</th>
+			<th>End</th>
+			<th>Location</th>
+			<th></th>
+			<th></th>
+    </tr>
+    {% for e in events %}
+      <tr>
+        <td><a href="/event/{{ e.event_id }}" style="color:#0033cc">{{e.event_id}}</a></td>
+				<td><a href="/group/{{ e.group_id }}" style="color:#0033cc">{{e.event_id}}</a></td>
+				<td><a href="/event/{{ e.event_id }}" style="color:#0033cc">{{e.name}}</a></td>
+				<td>{{e.creator}}</td>
+				<td>{{e.date_time}}</td>
+				<td>{{e.starttime}}</td>
+				<td>{{e.endtime}}</td>
+				<td>{{e.location}}</td>
+        <td><a href="edit_event/{{ e.event_id }}" class="btn btn-default pull-right">Edit</a></td>
+        <td>
+          <form action="{{url_for('delete_event', event_id=e.event_id)}}" method="post">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="submit" value="Delete" class="btn btn-danger">
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+</div>
+
+{% endblock %}

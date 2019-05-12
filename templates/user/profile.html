@@ -1,0 +1,62 @@
+{% extends 'base/base.html' %}
+{% block head %}<link rel="stylesheet" type='text/css' href="{{url_for('static', filename='css/profile.css') }}">{% endblock %}
+{% block title %} {{user.first_name}}'s Profile {% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <div class="row" id="info-container">
+        <div class="col-md-4 text-right">
+            <image src="{{url_for('static', filename='images/ProfilePics/jordan.png') }}" id="profile-pic"></image>
+        </div>
+        <div class="col-md-8 text-left">
+            <h2>{{user.first_name}} {{ user.last_name }}</h2>
+            <hr>
+            <p>Email: {{user.email}}</p>
+            {% if mem.following == 1: %}
+            <form action="{{url_for('unfollow_user', user_id=user.user_id)}}" method="post" action="">
+              <input type="hidden" name="_method" value="Unfollow">
+              <input type="submit" value="Unfollow" class="btn btn-primary">
+            </form>
+            {% else %}
+            <form action="{{url_for('follow_user', user_id=user.user_id)}}" method="post" action="">
+              <input type="hidden" name="_method" value="Follow">
+              <input type="submit" value="Follow" class="btn btn-primary">
+              </form>
+            {% endif %}
+        </div>
+    </div>
+      <hr/>
+    <div class="container">
+    <div class="row">
+        <h3>MEMBER OF</h3>
+        <table class="table table-hover">
+          <tr class='info'>
+            <th>Groups:</th>
+          </tr>
+        </table>
+        <section id="about">
+          {% for g in groups %}
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-4 text-center">
+                <div class="card" style="width: 18rem;">
+                  <img class"card-img-top" src="{{url_for('static', filename='images/eventpic.png') }}" alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="/group/{{ g.group_id }}" style="color:#0033cc">{{g.name}}</a></h5>
+                    <p class="card-text">{{g.description}}</p>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+{#  <hr>#}
+  <div>
+    <img src="{{session.profile_pic_path}}"/>
+  </div>
+{% endblock %}

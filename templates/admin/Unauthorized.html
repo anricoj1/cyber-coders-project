@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+  <h1>LOL NOPE</h1>
+  <h2><small style="color:#000000">Unauthorized.</small></h2>
+  <p>You dont have access.</p>
+  <h3>Redirecting To Home In <span id="countdown">5</span> seconds. Cya!!</h3>
+
+  <script type="text/javascript">
+
+      // Total seconds to wait
+      var seconds = 5;
+
+      function countdown() {
+          seconds = seconds - 1;
+          if (seconds < 0) {
+              // Chnage your redirection link here
+              window.location = "/";
+          } else {
+              // Update remaining seconds
+              document.getElementById("countdown").innerHTML = seconds;
+              // Count down using javascript
+              window.setTimeout("countdown()", 1000);
+          }
+      }
+
+      // Run countdown function
+      countdown();
+
+  </script>
+
+
+</div>
+
+{% endblock %}

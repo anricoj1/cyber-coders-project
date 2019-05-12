@@ -1,0 +1,66 @@
+{% extends 'base/base.html' %}
+{% block head %}<link rel="stylesheet" href="static/css/eventpage.css"/>{% endblock %}
+{% block title %}{{group.name}}{% endblock %}
+{% block content %}
+
+<div class="container container-first">
+  <div class="row">
+    <div class="col-lg-6">
+      <img src="/static/images/largeeventpic.png" class="figure-img img-responsive" id="grouppic"/>
+    </div>
+    <div id="desc-box" class="col-lg-6 text-left">
+      <div id="group-date">
+        <p> Created on: {{group.createdate}} By: {{group.creator}}</p>
+      </div>
+      <h1 id="group-name">{{group.name}}</h1>
+      <p>{{g.description}}</p>
+      {% if mem.attending == 1: %}
+      <form action="{{url_for('unfollow_group', group_id=group.group_id)}}" method="post" action="">
+        <input type="hidden" name="_method" value="Unfollow">
+        <input type="submit" value="Unfollow" class="btn btn-primary">
+      </form>
+      {% else %}
+      <form action="{{url_for('follow_group', group_id=group.group_id)}}" method="post" action="">
+        <input type="hidden" name="_method" value="Join">
+        <input type="submit" value="Join" class="btn btn-primary">
+        </form>
+      {% endif %}
+      <p></p>
+      <p><a href='/start_event/{{ group.group_id }}' style="color:#0033cc">Start Event</a> in this group</p>
+      <h3> <small style="color:#000000"> Number of Members: {{ count }} </small></h3>
+
+      <p>{{mem.user_name}}</p>
+    </div>
+  </div>
+</div>
+
+  <div class="row">
+    <hr class="col-md-12">
+  </div>
+
+  <div class="container">
+    <table class="table table-hover">
+      <tr class='info'>
+        <th>Events In This Group</th>
+        <th></th>
+      </tr>
+    </table>
+    <section id="about">
+      {% for e in event %}
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-4 text-center">
+            <div class="card" style="width: 18rem;">
+              <img class"card-img-top" src="static/images/eventpic.png">
+              <div class="card-body">
+                <h5 class="card-title"><a href="/event/{{ e.event_id }}" style="color:#0033cc">{{e.name}}</a></h5>
+                <p class="card-text">{{e.description}}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

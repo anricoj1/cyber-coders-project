@@ -1,0 +1,166 @@
+{% extends 'base/base.html' %}
+{% block head %}<link rel="stylesheet" href="/static/css/home.css"/>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+{% endblock %}
+{% block title %}Home -{% endblock %}
+{% block content %}
+{% from 'includes/_formhelpers.html' import render_field %}
+
+    <header class="bg-primary text-white animated fadeIn delay-2s">
+      <div class="container-fluid text-center">
+        <h1>Welcome to Meet {{session.first_name}}</h1>
+        <p class="lead">Find study groups to pass your next class</p>
+    </div>
+
+    <div class="container-fluid">
+        <form class="form-group" method="post" action="">
+         <div class="row" id="search-container">
+             <div class="col-md-12 text-center" >
+                 {{ form.search(placeholder="Find your Meet..",id="searchbar") }}
+                 <button type="submit"><i class="fa fa-search"></i></button>
+
+                 <div class="row text-center">
+{#                    THIS LOOP DISPLAYS RADIO ITEM HORIZONTALLY#}
+                     {% for subfield in form.select %}
+                        <tr>
+                            <td>{{ subfield(id="filter") }}</td>
+                            <td>{{ subfield.label }}</td>
+                        </tr>
+                     {% endfor %}
+                 </div>
+             </div>
+         </div>
+        </form>
+    </div>
+    </header>
+
+  <div class="container">
+    <h2><small style=" margin-bottom: 1000px; color:#000000;">  Recommendations For You! </small></h2>
+  </div>
+    <section id="about">
+      {% for g in groups %}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-sm-4">
+            <div class="card">
+            <a href="/group/{{ g.group_id }}">
+              <img class="img img-responsive card-img-top" src="static/images/eventpic.png" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">{{g.name}}</h5>
+                  <p class="card-text">
+                      {% if g.group_description == None %}
+                       <p> No Description</p>
+                       {% else %}
+                      {{g.group_description}}</p>
+                      {% endif %}
+              </div>
+            </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
+
+
+
+
+    <!-- JQUERY FROM TEMPLATE <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
+<!--  {% if search_type == 'users': -%}
+  <table class="table table-striped">
+    <tr>
+      <th>Name</th>
+      <th></th>
+    </tr>
+    {% for u in users %}
+      <tr>
+        <td><a href='/profile/{{ u.user_id }}'>{{u.email}}</a></td>
+      </tr>
+    {% endfor %}
+  </table>
+  {% elif search_type == 'events': -%}
+  <table class="table table-striped">
+    <tr>
+      <th>Event Name</th>
+      <th></th>
+    </tr>
+    {% for e in events %}
+      <tr>
+        <td><a href='/event/{{ e.event_id }}'>{{e.name}}</a></td>
+      </tr>
+    {% endfor %}
+  </table>
+  {% elif search_type == 'groups': -%}
+  <table class="table table-striped">
+    <tr>
+      <th>Group Name</th>
+      <th></th>
+    </tr>
+    {% for g in groups %}
+      <tr>
+        <td><a href='/group/{{ g.group_id }}'>{{g.name}}</a></td>
+      </tr>
+    {% endfor %}
+  </table>
+  {%- endif %} -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="styles/style.css" />
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+          <img src="images/open-book.png" width="30" height="auto" class="d-inline-block align-top" alt="">
+          MEET
+        </a>
+    </nav>
+
+      <div id="login">
+          <div class="container">
+              <div id="login-row" class="row justify-content-center align-items-center">
+                  <div id="login-column" class="col-md-6">
+                      <div id="login-box" class="col-md-12">
+                          <p> { { Result } }</p>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </body>
+</html -->

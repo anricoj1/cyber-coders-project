@@ -1,0 +1,38 @@
+body {
+  font-family: "Avenir Next";
+}
+i {
+  cursor: pointer;
+}
+/* .nav a{
+  color: #B8B8BA !important;
+}
+.nav a:hover{
+  color: #4A508B !important;
+} */
+
+.navbar{
+  height: 70px;
+  padding-top: 10px;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+/* .container{
+   background: #ccc;
+  margin: 50px auto;
+  height: 500px;
+} */
+
+#tester{
+  color: red;
+}
+
+#prof_pic{
+  height: 200px;
+  width: auto;
+}
+.wrapper {
+    border:1px solid #000;
+    display:inline-block;
+}

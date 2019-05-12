@@ -1,0 +1,51 @@
+#event-name{
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+#event-date{
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+#event-title{
+  margin:0px;
+}
+#static-box{
+  position: fixed;
+  top: 100px;
+  right:0px;
+  height: 600px;
+  width: 500px;
+  /* float: right; */
+  background-color: #F5F5F5;
+}
+#eventpic{
+  margin: 20px 0px 30px 0px;
+}
+
+.prof-img{
+  padding-left: 10px;
+  margin-top: 30px;
+  width: 100px;
+  height: auto;
+}
+.card{
+  padding-left: 50px;
+  padding-right:60px;
+  margin-bottom: 10px;
+  margin: 0 !important;
+}
+.card h5{
+  margin-bottom: 0;
+}
+
+#test{
+  padding: 20px;
+  padding-left: 100px;
+  background-color: #4A508B;
+  color: white;
+}
+.table-theme{
+  background-color: #4A508B;
+  color: white;
+
+}

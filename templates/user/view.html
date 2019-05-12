@@ -1,0 +1,130 @@
+{% extends 'base/base.html' %}
+{% block head %}<link rel="stylesheet" href="static/css/discover.css"/>{% endblock %}
+{% block title %}Discover{% endblock %}
+{% block content %}
+<div class="container">
+{#  <h1>{{session.first_name}} <small> Should Find Some Meets</small></h1>#}
+{#  <hr>#}
+  <h2>Discover {{type}}</h2>
+  {% from 'includes/_formhelpers.html' import render_field %}
+  <form method="POST" action="">
+    <div class="form-group iconSearch">
+      {{ form.search(id="search-field") }}
+      <div class="form-group">
+      {% for subfield in form.select %}
+          <tr>
+              <td>{{ subfield(id="filter") }}</td>
+              <td>{{ subfield.label }}</td>
+          </tr>
+      {% endfor %}
+    </div>
+      <i type="submit" class="fa fa-search"></i>
+    </div>
+  <hr/>
+{#    <p><input type=submit class="btn btn-primary" value=Search></p>#}
+  </form>
+  {% if search_type == 'groups': -%}
+  <section id="about">
+    {% for g in groups %}
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="card">
+            <a href="/group/{{ g.group_id}}">
+            <img class="img img-responsive card-img-top" src="static/images/eventpic.png" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">{{g.name}}</h5>
+              <p class="card-text">{{g.group_description}}</p>
+            </div>
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% elif search_type == 'events': -%}
+<section id="about">
+  {% for e in events %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="card">
+          <img class="card-img-top" src="static/images/eventpic.png" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title"><a href="/event/{{ e.event_id }}">{{e.name}}</a></h5>
+            <p class="card-text">{{e.description}}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+</section>
+{% elif search_type == 'users': -%}
+{% for u in users %}
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="col-md-3">
+          <figure>
+            <img class="prof-img" src="static/images/eventpic.png" alt="">
+            <figcaption><a href="/profile/{{u.user_id}}">{{u.first_name}}</a></figcaption>
+          </figure>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {%- endif %}
+</section>
+</div>
+
+
+  <!--<h3> <small> All Groups </small></h3>
+  <table class="table table-hover">
+    <tr class='info'>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+    </tr>
+    {% for g in groups %}
+      <tr>
+        <td><a href="/group/{{ g.group_id }}">{{g.name}}</a></td>
+        <td>{{g.creator}}</td>
+        <td>{{g.createdate}}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  <h3> <small> All Events </small></h3>
+  <table class="table table-hover">
+    <tr class='info'>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Meet Time</th>
+    </tr>
+    {% for e in events %}
+      <tr>
+        <td><a href="/event/{{ e.event_id }}">{{e.name}}</a></td>
+        <td>{{e.description}}</td>
+        <td>{{e.date_time}}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  <h3><small> Users </small></h3>
+  <table class="table table-hover">
+    <tr class='info'>
+      <th>Email</th>
+      <th></th>
+    </tr>
+    {% for u in users %}
+      <tr>
+        <td><a href='/profile/{{ u.user_id }}'>{{u.email}}</a></td>
+      </tr>
+    {% endfor %}
+  </table> -->
+
+{% endblock %}

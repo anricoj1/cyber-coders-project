@@ -1,0 +1,17 @@
+body {
+  font-family: "Avenir Next";
+}
+
+.container{
+  /* background: #ccc; */
+  margin: 50px auto;
+  height: 500px;
+}
+
+#prof_pic{
+  height: 200px;
+  width: auto;
+}
+i {
+  cursor: pointer;
+}

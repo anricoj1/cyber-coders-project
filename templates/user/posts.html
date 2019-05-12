@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container">
+  <h3>Activity Feed</h3>
+  <a class="btn btn-primary" href="/post"> Add Post</a>
+  <table class="table table-hover">
+    <tr style="info">
+      <th>ID</th>
+			<th>Post</th>
+      <th>Author</th>
+      <th>Day</th>
+      <th></th>
+    </tr>
+    {% for b in blog %}
+      <tr>
+				<td>{{b.post_id}}</td>
+        <td>{{b.body}}</td>
+        <td>{{b.author}}</td>
+        <td>{{b.date_time}}</td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

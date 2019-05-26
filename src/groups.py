@@ -39,10 +39,10 @@ def join_group(group_id):
     c = sq.connection.cursor()
     check = 1
     c.execute('INSERT INTO Attendee(group_id, user_name, attending) VALUES(%s,%s,%s)', (group_id, session['email'], check))
-    print(check)
+
     sq.connection.commit()
 
-    flash(session['email'] + 'Joined Group', 'info')
+    flash(session['email'] + ' Joined Group', 'info')
     return redirect(url_for('group', group_id=group_id))
 
 
@@ -114,6 +114,7 @@ def get_members(group_id):
     return recipients
 
 
+#verify owner of group 
 def is_owner(group_id):
     c = sq.connection.cursor()
     result = c.execute('SELECT group_id, creator FROM Groups_table WHERE group_id = %s', [group_id])

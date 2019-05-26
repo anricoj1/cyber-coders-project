@@ -51,6 +51,7 @@ def fetch_event(event_id):
     return render_template('events/event.html', event=event, count=count, attendee=attendee, mem=mem)
 
 
+# fetchall attendees of event for notifications append to list
 def get_attendees(event_id):
     c = sq.connection.cursor()
     c.execute('SELECT user_name, event_id, attending FROM Attendee WHERE event_id = %s', event_id)
@@ -114,6 +115,7 @@ def was_attendee(event_id):
         return join_event(event_id)
 
 
+#verify creator of event
 def is_creator(event_id):
     c = sq.connection.cursor()
     result = c.execute('SELECT event_id, creator FROM Events WHERE event_id = %s', [event_id])

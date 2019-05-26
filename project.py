@@ -8,13 +8,12 @@ import pymysql
 from wtforms.validators import DataRequired
 from passlib.hash import sha256_crypt
 from functools import wraps
-from src.base import search_results, search_discover
-from src.user import sign, log, lout, is_logged_in, dash, search, user_profile, modify_profile, is_current
+from src.base import *
+from src.user import *
 from src.profpage import display_prof
-from src.groups import group_create, join_group, retrieve_events, remove_group, get_members, leave_group, was_member, is_owner
-from src.events import remove_event, fetch_event, event_create, join_event, get_attendees, was_attendee, leave_event, is_creator
-from src.follow import follow, unfollow, was_follower, create, get_posts
-from src.admin import is_admin, admin_dashboard, ban, admin_register
+from src.groups import *
+from src.events import *
+from src.admin import *
 import sq
 import smtplib
 
@@ -29,6 +28,8 @@ app.config.update(
         MAIL_USERNAME= 'MEETCSC330@gmail.com',
         MAIL_PASSWORD= 'MeetMe330'
     )
+
+
 mail = Mail(app)
 
 
@@ -97,6 +98,7 @@ def logout():
     return lout()
 
 
+#admin only route role must be admin
 @app.route('/admin_only')
 @is_logged_in
 def admin_only():
@@ -112,7 +114,7 @@ def admin_only():
 def dashboard():
     flash(session['first_name'] + ' Your Dashboard Lets You Manage Your Meets!', 'info')
     if is_admin():
-        return render_template('admin/admin.html', message="I am admin")
+        return admin_dashboard()
     else:
         return dash()
 
@@ -131,6 +133,7 @@ def account():
     return display_prof()
 
 
+#admins can create another admin account
 @app.route('/add_admin', methods=['GET', 'POST'])
 def add_admin():
     if is_admin():
@@ -161,6 +164,7 @@ def start_group():
         return render_template('groups/add_group.html', form=form)
 
 
+#group page requires group_id
 @app.route('/group/<string:group_id>', methods=['GET', 'POST'])
 @is_logged_in
 def group(group_id):
@@ -173,6 +177,7 @@ def group(group_id):
     return retrieve_events(group, count, group_id)
 
 
+#follow/join group (if else for group.html to change buttons)
 @app.route('/follow_group/<string:group_id>', methods=['GET', 'POST'])
 @is_logged_in
 def follow_group(group_id):
@@ -180,20 +185,20 @@ def follow_group(group_id):
         c = sq.connection.cursor()
         c.execute('UPDATE Attendee SET attending = 1 WHERE user_name = %s AND group_id = %s', (session['email'], group_id))
         sq.connection.commit()
-        flash(session['email'] + ' Joined Group', 'info')
+        flash(session['first_name'] + ' Joined Group', 'info')
         return redirect(url_for('group', group_id=group_id))
     else:
-        return redirect(url_for('group', group_id=group_id))
+        return join_group(group_id)
 
 
-
+#unfollow/leave group (if else in group.html)
 @app.route('/unfollow_group/<string:group_id>', methods=['GET', 'POST'])
 @is_logged_in
 def unfollow_group(group_id):
     return leave_group(group_id)
 
 
-# starting event calls CreateEvent Form, requires event_create
+# starting event calls CreateEvent Form, requires event_create and group_id (interest Group)
 @app.route('/start_event/<string:group_id>', methods=['GET', 'POST'])
 def start_event(group_id):
     form = CreateEvent(request.form)
@@ -204,19 +209,18 @@ def start_event(group_id):
 
 
 
-# Creator has option to delete group if neccessary uses POST
+# Creator and admin have priveleges to delete group (no one else)
 @app.route('/delete_group/<string:group_id>', methods=['POST'])
 @is_logged_in
 def delete_group(group_id):
-    c = sq.connection.cursor()
-    c.execute('SELECT name FROM Groups_table WHERE group_id = %s', group_id)
-    group = c.fetchone()
-    mems = get_members(group_id)
-    msg = Message('Notifications For You',
-                   sender=session['email'],
-                   recipients=mems)
-    msg.body = 'Group ' + str(group.get('name')) + ' Has Been Removed'
-    return remove_group(group_id)
+    if is_admin():
+        delete_group_noto(group_id)
+        return remove_group(group_id)
+    elif is_owner(group_id):
+        delete_group_noto(group_id)
+        return remove_group(group_id)
+    else:
+        return render_template('admin/Unauthorized.html')
 
 
 # Event Form
@@ -237,7 +241,7 @@ def event(event_id):
 
 
 
-
+#follw/join event (if else in event.html)
 @app.route('/follow_event/<string:event_id>', methods=['GET', 'POST'])
 @is_logged_in
 def follow_event(event_id):
@@ -245,12 +249,13 @@ def follow_event(event_id):
         c = sq.connection.cursor()
         c.execute('UPDATE Attendee SET attending = 1 WHERE user_name = %s AND event_id = %s', (session['email'], event_id))
         sq.connection.commit()
+        flash(session['first_name'] + ' Joined Event', 'info')
         return redirect(url_for('event', event_id=event_id))
     else:
         return join_event(event_id)
 
 
-
+#unfollow/leave event (if else in event.html)
 @app.route('/unfollow_event/<string:event_id>', methods=['GET', 'POST'])
 @is_logged_in
 def unfollow_event(event_id):
@@ -258,6 +263,7 @@ def unfollow_event(event_id):
 
 
 
+#edit profile (in progresss) requires is_current(user_id) or Unauthorized
 @app.route('/edit_profile/<string:user_id>', methods=['GET', 'POST'])
 @is_logged_in
 def edit_profile(user_id):
@@ -268,72 +274,18 @@ def edit_profile(user_id):
 
 
 
-
-@app.route('/follow_user/<string:user_id>', methods=['GET', 'POST'])
-@is_logged_in
-def follow_user(user_id):
-    if follow(user_id):
-        c = sq.connection.cursor()
-        c.execute('UPDATE Follower SET following = 1 WHERE user_name = %s AND user_id = %s', (session['email'], user_id))
-        sq.connection.commit()
-        return redirect(url_for('profile', user_id=user_id))
-    else:
-        return follow_user(user_id)
-
-
-
-@app.route('/unfollow_user/<string:user_id>', methods=['GET', 'POST'])
-@is_logged_in
-def unfollow_user(user_id):
-    return unfollow(user_id)
-
-
-class PostForm(Form):
-    post = TextAreaField('Post', [validators.length(max=250)])
-
-
-@app.route('/post', methods=['GET', 'POST'])
-@is_logged_in
-def post():
-    form = PostForm(request.form)
-    if request.method == 'POST' and form.validate():
-        return create(form)
-    else:
-        return render_template('user/post.html', form=form)
-
-
-
-
-@app.route('/posts', methods=['GET', 'POST'])
-@is_logged_in
-def posts():
-    return get_posts()
-
-
-
-
-@app.route('/guess', methods=['GET', 'POST'])
-def guess():
-    if validate_email():
-        return render_template('admin/Unauthorized.html')
-    else:
-        return render_template('admin/Unauthorized.html')
-
-
 # deleting an event route Requires DELETE, uses POST
 @app.route('/delete_event/<string:event_id>', methods=['POST'])
 @is_logged_in
 def delete_event(event_id):
-    c = sq.connection.cursor()
-    c.execute('SELECT name FROM Events WHERE event_id = %s', event_id)
-    event = c.fetchone()
-    attend = get_attendees(event_id)
-    msg = Message('Notifications For You',
-                   sender=session['email'],
-                   recipients=attend)
-    msg.body = 'Event ' + str(event.get('name')) + ' Has Been Cancelled'
-    mail.send(msg)
-    return remove_event(event_id)
+    if is_admin():
+        delete_event_noto(event_id)
+        return remove_event(event_id)
+    elif is_creator(event_id):
+        delete_event_noto(event_id)
+        return remove_event(event_id)
+    else:
+        return render_template('admin/Unauthorized.html')
 
 
 #discover profiles, events, and groups. Maybe can be converted to some sort of feed
@@ -348,29 +300,33 @@ def viewall():
 
 
 
-
-
-
-
-
-
-
-
-
+#delete/ban account takes is_admin and is_current
 @app.route('/delete_profile/<string:user_id>', methods=['GET', 'POST'])
 def ban_user(user_id):
     if is_admin():
         return ban(user_id)
-    else:
+    elif is_current(user_id):
         return redirect(url_for('secondchance'))
+    else:
+        return render_template('admin/Unauthorized.html')
 
 
+#give user second chance before proceeding to delete account
 @app.route('/secondchance', methods=['GET', 'POST'])
 def secondchance():
     return render_template('secondchance.html')
 
 
 
+#edit user role priveleges (is_admin)
+@app.route('/edit_priv/<string:user_id>', methods=['GET', 'POST'])
+def edit_priv(user_id):
+    if is_admin():
+        c = sq.connection.cursor()
+        c.execute('UPDATE User SET role="admin" WHERE user_id = %s', [user_id])
+        return redirect(url_for('admin_only'))
+    else:
+        return render_template('admin/Unauthorized.html')
 
 
 
@@ -419,17 +375,13 @@ def edit_event(event_id):
 
             attend = get_attendees(event_id)
 
-            msg = Message('Notifications For You!',
-                        sender=session['email'],
-                        recipients=attend)
+            if attend == []:
+                return redirect(url_for('dashboard'))
 
-            msg.body = 'A Meet Event: ' + form.name.data + ' ON: ' + form.meetup.strftime + ' From: ' + str(times.get('starttime')) + ' - ' + str(times.get('endtime')) + ' AT ' + form.location.data
-
-            mail.send(msg)
-
-            flash('Event Updated, Notificaton Sent!', 'info')
-
-            return redirect(url_for('index'))
+            else:
+                edit_event_noto(event_id, form, attend, times)
+                flash('Event Updated, Notificaton Sent!', 'info')
+                return redirect(url_for('index'))
         else:
             return render_template('events/add_event.html', form=form)
     else:
@@ -467,22 +419,83 @@ def edit_group(group_id):
 
             c.close()
 
+
             attend = get_members(group_id)
 
-            msg = Message('Notifications For You!',
-                        sender=session['email'],
-                        recipients=attend)
+            if attend == []:
+                return redirect(url_for('dashboard'))
 
-            msg.body = 'Your Meet Group ' + form.name.data + ' Has Made A Change ' + form.description.data
-
-            mail.send(msg)
-
-            flash('Group Updated, Notificaton Sent', 'info')
-            return redirect(url_for('index'))
+            else:
+                edit_group_noto(group_id, form, attend)
+                flash('Group Updated, Notificaton Sent', 'info')
+                return redirect(url_for('dashboard'))
         else:
             return render_template('groups/add_group.html', form=form)
     else:
         return render_template('admin/Unauthorized.html')
+
+
+# delete group Notificaton
+def delete_group_noto(group_id):
+    c = sq.connection.cursor()
+    c.execute('SELECT name FROM Groups_table WHERE group_id = %s', group_id)
+    group = c.fetchone()
+    mems = get_members(group_id)
+    if mems == []:
+        return redirect(url_for('dashboard'))
+    else:
+        msg = Message('Notifications For You',
+                          sender=session['email'],
+                          recipients=mems)
+
+        msg.body = 'Group ' + str(group.get('name')) + ' Has Been Removed'
+        mail.send(msg)
+
+        return msg
+
+#delete event Notificaton
+def delete_event_noto(event_id):
+    c = sq.connection.cursor()
+    c.execute('SELECT name FROM Events WHERE event_id = %s', event_id)
+    event = c.fetchone()
+    mems = get_attendees(event_id)
+    if mems == []:
+        return redirect(url_for('dashboard'))
+
+    else:
+        msg = Message('Notifications For You',
+                          sender=session['email'],
+                          recipients=mems)
+
+        msg.body = 'Event ' + str(event.get('name')) + ' Has Been Cancelled'
+        mail.send(msg)
+
+        return msg
+
+
+#edit group Notificaton
+def edit_group_noto(group_id, form, attend):
+    msg = Message('Notifications For You!',
+                sender=session['email'],
+                recipients=attend)
+
+    msg.body = 'Your Meet Group ' + form.name.data + ' Has Made A Change ' + form.description.data
+
+    mail.send(msg)
+
+    return msg
+
+#edit event Notificaton
+def edit_event_noto(event_id, form, attend, times):
+    msg = Message('Notifications For You!',
+                sender=session['email'],
+                recipients=attend)
+
+    msg.body = 'A Meet Event: ' + form.name.data + ' ON: ' + form.meetup.strftime + ' From: ' + str(times.get('starttime')) + ' - ' + str(times.get('endtime')) + ' AT ' + form.location.data
+
+    mail.send(msg)
+
+    return msg
 
 
 if __name__ == '__main__':

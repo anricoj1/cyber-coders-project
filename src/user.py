@@ -27,7 +27,7 @@ def sign(form):
         role = 'user'
 
         if validate_email(form):
-            flash('Email in use.', 'info')
+            flash('Sorry, Email in use.', 'danger')
             return render_template('user/signup.html', form=form)
 
         else:
@@ -114,6 +114,7 @@ def dash():
     return render_template('user/dashboard.html', group=group, events=events, groups=groups, created=created, c1=c1, c2=c2, c3=c3, c4=c4)
 
 
+#search
 def search(form):
     c = sq.connection.cursor()
     c.execute('SELECT * FROM Groups_table')
@@ -127,7 +128,7 @@ def search(form):
 
 
 
-
+# random messages at login
 def get_flashed():
     strings = ['Welcome Back! ' + session['first_name'],
                 'Greetings! ' + session['first_name'],
@@ -139,6 +140,7 @@ def get_flashed():
     return ran_string
 
 
+#user profile attributes
 def user_profile(user_id):
     c = sq.connection.cursor()
     c.execute('SELECT * FROM User WHERE user_id = %s', [user_id])
@@ -146,9 +148,11 @@ def user_profile(user_id):
 
     c.execute('SELECT user_name, following FROM Follower WHERE user_id=%s AND following=1 AND user_name=%s', (user_id, session['email']))
     mem = c.fetchone()
-    print(mem)
 
-    return render_template('user/profile.html', user=user, mem=mem)
+    c.execute('SELECT * FROM Posts WHERE author = %s', session['email'])
+    posts = c.fetchall()
+
+    return render_template('user/profile.html', user=user, mem=mem, posts=posts)
 
 
 class EditProfile(Form):
@@ -161,6 +165,8 @@ class EditProfile(Form):
     ])
     confirm = PasswordField('Confirm Password')
 
+
+#modify profile function
 def modify_profile(user_id):
     c = sq.connection.cursor()
     result = c.execute('SELECT * FROM User WHERE user_id = %s', [user_id])
@@ -192,6 +198,7 @@ def modify_profile(user_id):
     return render_template('user/edit_profile.html', form=form)
 
 
+#verify current user / called on routes that require priveleges
 def is_current(user_id):
     c = sq.connection.cursor()
     result = c.execute('SELECT user_id FROM User WHERE user_id = %s', [user_id])
@@ -205,7 +212,7 @@ def is_current(user_id):
         return 'Unauthorized'
 
 
-
+# validate if email is in use
 def validate_email(form):
     emails = get_emails()
     print(emails)
@@ -220,6 +227,7 @@ def validate_email(form):
     return 'Good Try'
 
 
+#fetchall emails in db, append to list
 def get_emails():
     c = sq.connection.cursor()
     result = c.execute('SELECT email FROM User')

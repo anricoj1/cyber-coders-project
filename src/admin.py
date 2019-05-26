@@ -8,7 +8,7 @@ import sq
 
 
 
-
+#decides if a user is an admin or note based off session roles
 def is_admin():
     current_role = session['role']
     print(current_role)
@@ -21,6 +21,7 @@ def is_admin():
         return 'User Unauthorized'
 
 
+#admin dashboard, similar to user dashboard
 def admin_dashboard():
     c = sq.connection.cursor()
     c.execute('SELECT * FROM User WHERE role="user"')
@@ -32,7 +33,7 @@ def admin_dashboard():
     return render_template('admin/admin.html', message="I am admin", users=users, groups=groups, events=events)
 
 
-
+# register an admin
 def admin_register(form):
     fname = form.fname.data
     lname = form.lname.data
@@ -53,11 +54,12 @@ def admin_register(form):
     return render_template('user/login.html', form=form)
 
 
+#ban a user (deletes account)
 def ban(user_id):
     c = sq.connection.cursor()
     c.execute('DELETE FROM User WHERE user_id = %s', [user_id])
-    sq.conenction.commit()
+    sq.connection.commit()
 
     c.close()
 
-    return redirect(url_for('admin_only'))
+    return redirect(url_for('dashboard'))
